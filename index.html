@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Beats Store</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ====== ФОН с градиентом ====== */
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 20% 20%, #1a0533 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 10%, #0a1a4a 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 80%, #0d2a1a 0%, transparent 60%),
+        #080810;
+      color: #fff;
+      font-family: -apple-system, 'SF Pro Display', 'Segoe UI', Arial, sans-serif;
+      padding-bottom: 130px;
+      overflow-x: hidden;
+    }
+
+    /* Декоративные блюр-пятна на фоне */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -100px;
+      left: -100px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(120, 60, 255, 0.15), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: 100px;
+      right: -80px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(0, 120, 255, 0.12), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ====== GLASS МИКСИН ====== */
+    .glass {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    /* ====== HEADER ====== */
+    .header {
+      position: relative;
+      z-index: 1;
+      padding: 52px 20px 20px;
+    }
+
+    .header-glass {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 10px 10px 10px;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .logo-icon {
+      width: px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #7b3fff, #0064ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 20px rgba(123, 63, 255, 0.4);
+    }
+
+    .logo-text h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      background: linear-gradient(135deg, #fff 60%, rgba(255,255,255,0.5));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo-text p {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* ====== SECTION ====== */
+    .section-title {
+      font-size: 17px;
+      font-weight: 700;
+      padding: 24px 20px 12px;
+      position: relative;
+      z-index: 1;
+      letter-spacing: -0.2px;
+      color: rgba(255,255,255,0.9);
+    }
+
+    /* ====== ГОРИЗОНТАЛЬНЫЙ СКРОЛЛ ====== */
+    .tracks-row {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 0 20px 8px;
+      scrollbar-width: none;
+      position: relative;
+      z-index: 1;
+    }
+    .tracks-row::-webkit-scrollbar { display: none; }
+
+    /* ====== КАРТОЧКА ====== */
+    .card {
+      flex: 0 0 130px;
+      border-radius: 18px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+
+      /* Glass */
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.13);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.1) 0%,
+        transparent 50%
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .card:active {
+      transform: scale(0.95);
+    }
+
+    .card.playing {
+      border-color: rgba(100, 160, 255, 0.5);
+      box-shadow:
+        0 0 0 1px rgba(100,160,255,0.3),
+        0 8px 32px rgba(0, 100, 255, 0.25),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+
+    /* ОБЛОЖКА */
+    .card-cover {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      overflow: hidden;
+      background: #1a1a2e;
+    }
+
+    .card-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .card:hover .card-cover img,
+    .card.playing .card-cover img {
+      transform: scale(1.06);
+    }
+
+    .card-cover .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      transition: opacity 0.25s;
+      z-index: 2;
+    }
+
+    .overlay-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #fff;
+      transition: transform 0.2s;
+    }
+
+    .card:hover .overlay,
+    .card.playing .overlay { opacity: 1; }
+
+    .card:hover .overlay-btn { transform: scale(1.1); }
+
+    /* ИНФО */
+    .card-info {
+      padding: 9px 9px 11px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 7px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: rgba(255,255,255,0.95);
+    }
+
+    /* КНОПКА КУПИТЬ */
+    .btn-buy {
+      width: 100%;
+      padding: 7px 0;
+      border-radius: 10px;
+      border: 1px solid rgba(100, 160, 255, 0.5);
+      background: rgba(0, 100, 255, 0.15);
+      backdrop-filter: blur(10px);
+      color: rgba(255,255,255,0.9);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.2px;
+    }
+
+    .btn-buy:hover {
+      background: rgba(0, 100, 255, 0.4);
+      border-color: rgba(100, 160, 255, 0.8);
+      color: #fff;
+    }
+
+    .btn-buy:active { transform: scale(0.96); }
+
+    /* ====== МИНИ ПЛЕЕР ====== */
+    .mini-player {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 12px 16px;
+    }
+
+    .player-glass {
+      background: rgba(18, 18, 30, 0.75);
+      backdrop-filter: blur(40px) saturate(200%);
+      -webkit-backdrop-filter: blur(40px) saturate(200%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 22px;
+      padding: 14px 16px 14px;
+      box-shadow:
+        0 -2px 40px rgba(0,0,0,0.5),
+        0 0 0 0.5px rgba(255,255,255,0.05),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Блик сверху */
+    .player-glass::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.2),
+        transparent
+      );
+    }
+
+    /* Верхняя строка */
+    .player-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .mini-cover {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.1);
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    .mini-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .mini-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .mini-title {
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: rgba(255,255,255,0.95);
+      letter-spacing: -0.2px;
+    }
+
+    .mini-price {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 1px;
+    }
+
+    /* Кнопки */
+    .mini-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .ctrl {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      backdrop-filter: blur(10px);
+    }
+
+    .ctrl:hover {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      transform: scale(1.05);
+    }
+
+    .ctrl:active { transform: scale(0.93); }
+
+    .ctrl-play {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #7b3fff, #0064ff) !important;
+      border: none !important;
+      color: #fff !important;
+      font-size: 14px;
+      box-shadow: 0 4px 16px rgba(0, 100, 255, 0.4);
+    }
+
+    .ctrl-play:hover {
+      box-shadow: 0 4px 24px rgba(0, 100, 255, 0.6) !important;
+      transform: scale(1.08) !important;
+    }
+
+    /* Прогресс */
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .progress {
+      flex: 1;
+      height: 3px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 2px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #7b3fff, #0064ff);
+      border-radius: 2px;
+      pointer-events: none;
+      transition: width 0.1s linear;
+    }
+
+    .timer {
+      font-size: 10px;
+      color: rgba(255,255,255,0.35);
+      white-space: nowrap;
+      min-width: 72px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.3px;
+    }
+
+    /* Громкость */
+    .volume-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .vol-icon {
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+      flex-shrink: 0;
+      width: 16px;
+      text-align: center;
+    }
+
+    .volume-slider {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 3px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      transition: transform 0.15s;
+    }
+
+    .volume-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.25);
+    }
+
+    .volume-slider::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    .vol-value {
+      font-size: 10px;
+      color: rgba(255,255,255,0.35);
+      min-width: 28px;
+      text-align: right;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header-glass">
+    <div class="logo-row">
+      <div class="logo-icon"></div>
+      <div class="logo-text">
+        <h1>CAYOOMONEY</h1>
+        <p>Выбери бит — и он твой!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPULAR -->
+  <div class="section-title">🔥 Popular</div>
+  <div class="tracks-row" id="popular"></div>
+
+  <!-- ALL BEATS -->
+  <div class="section-title">🎧 All Beats</div>
+  <div class="tracks-row" id="all"></div>
+
+  <!-- МИНИ ПЛЕЕР -->
+  <div class="mini-player">
+    <div class="player-glass">
+
+      <!-- Верх -->
+      <div class="player-top">
+        <div class="mini-cover">
+          <img id="pCover" src="" alt=""/>
+        </div>
+        <div class="mini-info">
+          <div class="mini-title" id="pTitle">Выбери трек...</div>
+          <div class="mini-price" id="pPrice">—</div>
+        </div>
+        <div class="mini-controls">
+          <button class="ctrl" id="btnPrev">⏮</button>
+          <button class="ctrl ctrl-play" id="btnPlay">▶</button>
+          <button class="ctrl" id="btnNext">⏭</button>
+        </div>
+      </div>
+
+      <!-- Прогресс + таймер -->
+      <div class="progress-row">
+        <div class="progress" id="progressBar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="timer" id="timer">0:00 / 0:00</div>
+      </div>
+
+      <!-- Громкость -->
+      <div class="volume-row">
+        <span class="vol-icon" id="volIcon">🔊</span>
+        <input class="volume-slider" id="volumeSlider" type="range" min="0" max="100" value="80"/>
+        <span class="vol-value" id="volValue">80%</span>
+      </div>
+
+    </div>
+  </div>
+
+  <audio id="audio"></audio>
+
+<script>
+// ================================================================
+// 👇 ТВОИ БИТЫ
+// ================================================================
+const beats = [
+  {
+    id: 1,
+    name: "Inferno",
+    price: 30,
+    section: "popular",
+    cover: "covers/inferno.jpg",
+    audio: "beats/inferno.mp3"
+  }
+  // добавляй сюда следующие биты
+];
+
+// ================================================================
+// 👇 ТВОЙ ТЕЛЕГРАМ USERNAME
+// ================================================================
+const YOUR_USERNAME = "oxs1x";
+
+// ================================================================
+// ПЛЕЕР
+// ================================================================
+const audio        = document.getElementById('audio');
+const btnPlay      = document.getElementById('btnPlay');
+const btnPrev      = document.getElementById('btnPrev');
+const btnNext      = document.getElementById('btnNext');
+const pCover       = document.getElementById('pCover');
+const pTitle       = document.getElementById('pTitle');
+const pPrice       = document.getElementById('pPrice');
+const progFill     = document.getElementById('progressFill');
+const progBar      = document.getElementById('progressBar');
+const timerEl      = document.getElementById('timer');
+const volumeSlider = document.getElementById('volumeSlider');
+const volValue     = document.getElementById('volValue');
+const volIcon      = document.getElementById('volIcon');
+
+let currentId = null;
+let playing   = false;
+
+audio.volume  = 0.8;
+
+function fmt(sec) {
+  if (isNaN(sec)) return '0:00';
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+function play(id) {
+  const beat = beats.find(b => b.id === id);
+  if (!beat) return;
+
+  if (currentId === id) { togglePause(); return; }
+
+  currentId = id;
+  audio.src = beat.audio;
+  audio.play();
+  playing = true;
+
+  pTitle.textContent = beat.name;
+  pPrice.textContent = `$${beat.price}.00`;
+  pCover.src = beat.cover;
+  btnPlay.textContent = '⏸';
+
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('playing'));
+  document.querySelectorAll(`.card[data-id="${id}"]`).forEach(c => {
+    c.classList.add('playing');
+    c.querySelector('.overlay-btn').textContent = '⏸';
+  });
+}
+
+function togglePause() {
+  if (playing) {
+    audio.pause(); playing = false;
+    btnPlay.textContent = '▶';
+    document.querySelectorAll(`.card[data-id="${currentId}"] .overlay-btn`)
+      .forEach(o => o.textContent = '▶');
+  } else {
+    audio.play(); playing = true;
+    btnPlay.textContent = '⏸';
+    document.querySelectorAll(`.card[data-id="${currentId}"] .overlay-btn`)
+      .forEach(o => o.textContent = '⏸');
+  }
+}
+
+btnPlay.addEventListener('click', () => {
+  if (currentId === null && beats.length) play(beats[0].id);
+  else togglePause();
+});
+
+btnPrev.addEventListener('click', () => {
+  if (currentId === null) return;
+  const idx = beats.findIndex(b => b.id === currentId);
+  play(beats[(idx - 1 + beats.length) % beats.length].id);
+});
+
+btnNext.addEventListener('click', () => {
+  if (currentId === null) return;
+  const idx = beats.findIndex(b => b.id === currentId);
+  play(beats[(idx + 1) % beats.length].id);
+});
+
+audio.addEventListener('ended', () => {
+  if (currentId === null) return;
+  const idx = beats.findIndex(b => b.id === currentId);
+  play(beats[(idx + 1) % beats.length].id);
+});
+
+audio.addEventListener('timeupdate', () => {
+  if (!audio.duration) return;
+  const pct = (audio.currentTime / audio.duration) * 100;
+  progFill.style.width = pct + '%';
+  timerEl.textContent = `${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;
+});
+
+progBar.addEventListener('click', (e) => {
+  if (!audio.duration) return;
+  audio.currentTime = (e.offsetX / progBar.offsetWidth) * audio.duration;
+});
+
+volumeSlider.addEventListener('input', () => {
+  const val = parseInt(volumeSlider.value);
+  audio.volume = val / 100;
+  volValue.textContent = val + '%';
+  volIcon.textContent = val === 0 ? '🔇' : val < 40 ? '🔉' : '🔊';
+});
+
+function buyBeat(beatId) {
+  const beat = beats.find(b => b.id === beatId);
+  if (!beat) return;
+  const msg = encodeURIComponent(`Привет! Хочу купить бит "${beat.name}" за $${beat.price}`);
+  const url = `https://t.me/${YOUR_USERNAME}?text=${msg}`;
+  if (window.Telegram?.WebApp) window.Telegram.WebApp.openTelegramLink(url);
+  else window.open(url, '_blank');
+}
+
+// ================================================================
+// РЕНДЕР
+// ================================================================
+function renderSection(sectionId, filter) {
+  const container = document.getElementById(sectionId);
+  const list = filter === 'all' ? beats : beats.filter(b => b.section === filter);
+
+  if (list.length === 0) {
+    container.previousElementSibling.style.display = 'none';
+    return;
+  }
+
+  list.forEach(beat => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.id = beat.id;
+
+    card.innerHTML = `
+      <div class="card-cover" onclick="play(${beat.id})">
+        <img
+          src="${beat.cover}"
+          alt="${beat.name}"
+          onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22130%22 height=%22130%22><rect width=%22130%22 height=%22130%22 fill=%22%231a1a2e%22/><text x=%2250%25%22 y=%2250%25%22 font-size=%2240%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22>🎵</text></svg>'"
+        />
+        <div class="overlay">
+          <div class="overlay-btn">▶</div>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="card-name">${beat.name}</div>
+        <button class="btn-buy" onclick="buyBeat(${beat.id})">
+          $${beat.price}.00
+        </button>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+renderSection('popular', 'popular');
+renderSection('all', 'all');
+
+if (window.Telegram?.WebApp) {
+  window.Telegram.WebApp.ready();
+  window.Telegram.WebApp.expand();
+}
+</script>
+
+</body>
+</html>
