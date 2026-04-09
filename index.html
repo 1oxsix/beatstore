@@ -13,10 +13,10 @@
     body {
       min-height: 100vh;
       background:
-        radial-gradient(ellipse at 20% 20%, #1a0533 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 10%, #0a1a4a 0%, transparent 55%),
-        radial-gradient(ellipse at 50% 80%, #0d2a1a 0%, transparent 60%),
-        #080810;
+        radial-gradient(ellipse at 20% 20%, #a77777 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 10%, #a1a1a1 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 80%, #a6a6b3 0%, transparent 60%),
+        #424271;
       color: #fff;
       font-family: -apple-system, 'SF Pro Display', 'Segoe UI', Arial, sans-serif;
       padding-bottom: 130px;
@@ -64,7 +64,7 @@
     }
 
     .header-glass {
-      background: rgba(255,255,255,0.05);
+      background: rgb(39 37 37 / 18%);
       backdrop-filter: blur(30px);
       -webkit-backdrop-filter: blur(30px);
       border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -96,7 +96,7 @@
       letter-spacing: -0.3px;
       background: linear-gradient(135deg, #fff 60%, rgba(255,255,255,0.5));
       -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      
     }
 
     .logo-text p {
@@ -162,11 +162,11 @@
     }
 
     .card.playing {
-      border-color: rgba(100, 160, 255, 0.5);
-      box-shadow:
-        0 0 0 1px rgba(100,160,255,0.3),
-        0 8px 32px rgba(0, 100, 255, 0.25),
-        inset 0 1px 0 rgba(255,255,255,0.15);
+      border-color: rgba(181 255 100 / 50%);
+          box-shadow: 
+          inset 8px -3px 9px 6px rgb(187 187 187 / 72%), 
+          inset 0 8px 32px rgba(0, 100, 255, 0.25), 
+          inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
 
     /* ОБЛОЖКА */
@@ -247,8 +247,8 @@
       width: 100%;
       padding: 7px 0;
       border-radius: 10px;
-      border: 1px solid rgba(100, 160, 255, 0.5);
-      background: rgba(0, 100, 255, 0.15);
+      border: 1px solid rgb(92 97 105 / 50%);
+      background: rgb(6 12 7 / 15%);
       backdrop-filter: blur(10px);
       color: rgba(255,255,255,0.9);
       font-size: 12px;
@@ -275,7 +275,7 @@
     }
 
     .player-glass {
-      background: rgba(18, 18, 30, 0.75);
+      background: rgb(67 67 67 / 75%);
       backdrop-filter: blur(40px) saturate(200%);
       -webkit-backdrop-filter: blur(40px) saturate(200%);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -369,6 +369,7 @@
       justify-content: center;
       transition: all 0.2s;
       backdrop-filter: blur(10px);
+      box-shadow: 0 4px 16px rgb(2 7 14 / 40%);
     }
 
     .ctrl:hover {
@@ -382,11 +383,10 @@
     .ctrl-play {
       width: 38px;
       height: 38px;
-      background: linear-gradient(135deg, #7b3fff, #0064ff) !important;
-      border: none !important;
+      background: linear-gradient(135deg, #99898978, #2d426340) !important;
       color: #fff !important;
       font-size: 14px;
-      box-shadow: 0 4px 16px rgba(0, 100, 255, 0.4);
+      box-shadow: 0 4px 16px rgb(2 7 14 / 40%);
     }
 
     .ctrl-play:hover {
