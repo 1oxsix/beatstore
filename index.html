@@ -499,7 +499,7 @@ const beats = [
   {
     id: 1,
     name: "Inferno",
-    price: 30,
+    price: 2500,
     section: "popular",
     cover: "inferno.jpg",
     audio: "inferno.mp3"
@@ -551,7 +551,7 @@ function play(id) {
   playing = true;
 
   pTitle.textContent = beat.name;
-  pPrice.textContent = `$${beat.price}.00`;
+  pPrice.textContent = `{beat.price}.₽`;
   pCover.src = beat.cover;
   btnPlay.textContent = '⏸';
 
