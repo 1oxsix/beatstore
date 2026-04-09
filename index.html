@@ -456,6 +456,10 @@
   <div class="section-title">🎧 All Beats</div>
   <div class="tracks-row" id="all"></div>
 
+  <!-- DISCOUNT BEATS -->
+  <div class="section-title">🏷️ Discount </div>
+  <div class="tracks-row" id="discount"></div>
+
   <!-- МИНИ ПЛЕЕР -->
   <div class="mini-player">
     <div class="player-glass">
@@ -508,7 +512,7 @@ const beats = [
     id: 2,
     name: "Peso",
     price: 2000,
-    section: "popular",
+    section: "all",
     cover: "peso.jpg",
     audio: "Peso 140bpm.mp3"
   },
@@ -524,9 +528,25 @@ const beats = [
     id: 4,
     name: "Takoyama",
     price: 1500,
-    section: "popular",
+    section: "discount",
     cover: "takoyama.jpg",
     audio: "Takoyama 99bpm.mp3"
+  },
+  {
+    id: 5,
+    name: "Gorilla",
+    price: 1500,
+    section: "discount",
+    cover: "gorilla.jpg",
+    audio: "gorilla 164 bpm.mp3"
+  },
+  {
+    id: 6,
+    name: "Unotheactivist",
+    price: 2000,
+    section: "all",
+    cover: "Unotheactivist.jpg",
+    audio: "Unotheactivist.mp3"
   },
   // добавляй сюда следующие биты
 ];
@@ -554,7 +574,7 @@ const timerEl      = document.getElementById('timer');
 let currentId = null;
 let playing   = false;
 
-audio.volume  = 0.8;
+audio.volume  = 1;
 
 function fmt(sec) {
   if (isNaN(sec)) return '0:00';
@@ -639,7 +659,7 @@ function buyBeat(beatId) {
   const beat = beats.find(b => b.id === beatId);
   if (!beat) return;
   const msg = encodeURIComponent(`Привет! Хочу купить бит "${beat.name}" за ${beat.price} ₽`);
-  const url = `https://t.me/${oxs1x}?text=${msg}`;
+  const url = `https://t.me/${YOUR_USERNAME}?text=${msg}`;
   if (window.Telegram?.WebApp) window.Telegram.WebApp.openTelegramLink(url);
   else window.open(url, '_blank');
 }
@@ -686,6 +706,8 @@ function renderSection(sectionId, filter) {
 
 renderSection('popular', 'popular');
 renderSection('all', 'all');
+renderSection('discount', 'discount');
+
 
 if (window.Telegram?.WebApp) {
   window.Telegram.WebApp.ready();
