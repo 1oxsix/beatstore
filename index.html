@@ -551,7 +551,7 @@ function play(id) {
   playing = true;
 
   pTitle.textContent = beat.name;
-  pPrice.textContent = `{beat.price}.₽`;
+  pPrice.textContent = `{beat.price} ₽`;
   pCover.src = beat.cover;
   btnPlay.textContent = '⏸';
 
@@ -614,7 +614,7 @@ progBar.addEventListener('click', (e) => {
 function buyBeat(beatId) {
   const beat = beats.find(b => b.id === beatId);
   if (!beat) return;
-  const msg = encodeURIComponent(`Привет! Хочу купить бит "${beat.name}" за $${beat.price}`);
+  const msg = encodeURIComponent(`Привет! Хочу купить бит "${beat.name}" за ${beat.price}`);
   const url = `https://t.me/${YOUR_USERNAME}?text=${msg}`;
   if (window.Telegram?.WebApp) window.Telegram.WebApp.openTelegramLink(url);
   else window.open(url, '_blank');
@@ -651,7 +651,7 @@ function renderSection(sectionId, filter) {
       <div class="card-info">
         <div class="card-name">${beat.name}</div>
         <button class="btn-buy" onclick="buyBeat(${beat.id})">
-          $${beat.price}.00
+          ${beat.price} ₽
         </button>
       </div>
     `;
