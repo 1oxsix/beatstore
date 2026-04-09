@@ -429,12 +429,28 @@
       font-variant-numeric: tabular-nums;
       letter-spacing: 0.3px;
     }
+
     .card-tag {
     font-size: 10px;
     color: rgba(255,255,255,0.35);
     margin-bottom: 7px;
-    letter-spacing: 0.3px;
     }
+    
+    .card-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: linear-gradient(135deg, #000000, #0064ff);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 3px 7px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+  z-index: 3;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+    
 
     
 
@@ -512,7 +528,8 @@ const beats = [
     section: "popular",
     cover: "inferno.jpg",
     audio: "inferno.mp3",
-    tag: "ALBLACK 52 TYPE BEAT"
+    tag: "ALBLACK 52 TYPE BEAT",
+    badge: "🔥 HOT"
   },
   {
     id: 2,
@@ -521,7 +538,8 @@ const beats = [
     section: "all",
     cover: "peso.jpg",
     audio: "Peso 140bpm.mp3",
-    tag: " A$AP ROCKY TYPE BEAT"
+    tag: " A$AP ROCKY TYPE BEAT",
+    badge: "NEW"
   },
   {
     id: 3,
@@ -530,7 +548,8 @@ const beats = [
     section: "popular",
     cover: "lore.jpg",
     audio: "Lore 149bpm.mp3",
-    tag: "YEAT TYPE BEAT"
+    tag: "YEAT TYPE BEAT",
+    badge: "🔥 HOT"
   },
   {
     id: 4,
@@ -539,7 +558,8 @@ const beats = [
     section: "discount",
     cover: "takoyama.jpg",
     audio: "Takoyama 99bpm.mp3",
-    tag: "NEW JAZZ TYPE BEAT"
+    tag: "NEW JAZZ TYPE BEAT",
+    badge: "SALE"
   },
   {
     id: 5,
@@ -548,7 +568,8 @@ const beats = [
     section: "discount",
     cover: "gorilla.jpg",
     audio: "gorilla 164 bpm.mp3",
-    tag: "ALI TYPE BEAT"
+    tag: "ALI TYPE BEAT",
+    badge: "SALE"
   },
   {
     id: 6,
@@ -557,7 +578,8 @@ const beats = [
     section: "all",
     cover: "Unotheactivist.jpg",
     audio: "Unotheactivist.mp3",
-    tag: "RICH AMIRI TYPE BEAT"
+    tag: "RICH AMIRI TYPE BEAT",
+    badge: "NEW"
   },
   {
     id: 7,
@@ -566,7 +588,8 @@ const beats = [
     section: "popular",
     cover: "Comeback.jpg",
     audio: "Comeback.mp3",
-    tag: "YEAT TYPE BEAT"
+    tag: "YEAT TYPE BEAT",
+    badge: "NEW"
   },
   {
     id: 8,
@@ -575,7 +598,8 @@ const beats = [
     section: "discount",
     cover: "Kids.jpg",
     audio: "Kids.mp3",
-    tag: "ESDEEKID ALI TYPE BEAT"
+    tag: "ESDEEKID ALI TYPE BEAT",
+    badge: "SALE"
   },
   {
     id: 9,
@@ -584,7 +608,8 @@ const beats = [
     section: "all",
     cover: "Wemadeit.jpg",
     audio: "Wemadeit V2.mp3",
-    tag: "LIL UZI VERT TYPE"
+    tag: "LIL UZI VERT TYPE",
+    badge: "NEW"
   },
   // добавляй сюда следующие биты
 ];
@@ -729,6 +754,7 @@ function renderSection(sectionId, filter) {
         <div class="overlay">
           <div class="overlay-btn">▶</div>
         </div>
+          ${beat.badge ? `<div class="card-badge">${beat.badge}</div>` : ''}
       </div>
       <div class="card-info">
         <div class="card-name">${beat.name}</div>
