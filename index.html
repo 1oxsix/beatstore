@@ -235,7 +235,6 @@
     .card-name {
       font-size: 13px;
       font-weight: 600;
-      margin-bottom: 7px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -430,6 +429,12 @@
       font-variant-numeric: tabular-nums;
       letter-spacing: 0.3px;
     }
+    .card-tag {
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 7px;
+    letter-spacing: 0.3px;
+    }
 
     
 
@@ -506,7 +511,8 @@ const beats = [
     price: 2500,
     section: "popular",
     cover: "inferno.jpg",
-    audio: "inferno.mp3"
+    audio: "inferno.mp3",
+    tag: "ALBLACK 52 TYPE BEAT"
   },
   {
     id: 2,
@@ -514,7 +520,8 @@ const beats = [
     price: 2000,
     section: "all",
     cover: "peso.jpg",
-    audio: "Peso 140bpm.mp3"
+    audio: "Peso 140bpm.mp3",
+    tag: " A$AP ROCKY TYPE BEAT"
   },
   {
     id: 3,
@@ -522,7 +529,8 @@ const beats = [
     price: 2500,
     section: "popular",
     cover: "lore.jpg",
-    audio: "Lore 149bpm.mp3"
+    audio: "Lore 149bpm.mp3",
+    tag: "YEAT TYPE BEAT"
   },
   {
     id: 4,
@@ -530,7 +538,8 @@ const beats = [
     price: 1500,
     section: "discount",
     cover: "takoyama.jpg",
-    audio: "Takoyama 99bpm.mp3"
+    audio: "Takoyama 99bpm.mp3",
+    tag: "NEW JAZZ TYPE BEAT"
   },
   {
     id: 5,
@@ -538,7 +547,8 @@ const beats = [
     price: 1500,
     section: "discount",
     cover: "gorilla.jpg",
-    audio: "gorilla 164 bpm.mp3"
+    audio: "gorilla 164 bpm.mp3",
+    tag: "ALI TYPE BEAT"
   },
   {
     id: 6,
@@ -546,7 +556,8 @@ const beats = [
     price: 2000,
     section: "all",
     cover: "Unotheactivist.jpg",
-    audio: "Unotheactivist.mp3"
+    audio: "Unotheactivist.mp3",
+    tag: "RICH AMIRI TYPE BEAT"
   },
   {
     id: 7,
@@ -554,7 +565,8 @@ const beats = [
     price: 2000,
     section: "popular",
     cover: "Comeback.jpg",
-    audio: "Comeback.mp3"
+    audio: "Comeback.mp3",
+    tag: "YEAT TYPE BEAT"
   },
   {
     id: 8,
@@ -562,7 +574,8 @@ const beats = [
     price: 1000,
     section: "discount",
     cover: "Kids.jpg",
-    audio: "Kids.mp3"
+    audio: "Kids.mp3",
+    tag: "ESDEEKID ALI TYPE BEAT"
   },
   {
     id: 9,
@@ -570,7 +583,8 @@ const beats = [
     price: 2000,
     section: "all",
     cover: "Wemadeit.jpg",
-    audio: "Wemadeit V2.mp3"
+    audio: "Wemadeit V2.mp3",
+    tag: "LIL UZI VERT TYPE"
   },
   // добавляй сюда следующие биты
 ];
@@ -718,9 +732,11 @@ function renderSection(sectionId, filter) {
       </div>
       <div class="card-info">
         <div class="card-name">${beat.name}</div>
+        <div class="card-tag">${beat.tag}</div>
         <button class="btn-buy" onclick="buyBeat(${beat.id})">
           ${beat.price} ₽
         </button>
+        
       </div>
     `;
 
