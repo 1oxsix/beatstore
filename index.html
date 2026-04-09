@@ -503,7 +503,31 @@ const beats = [
     section: "popular",
     cover: "inferno.jpg",
     audio: "inferno.mp3"
-  }
+  },
+  {
+    id: 2,
+    name: "Peso",
+    price: 2000,
+    section: "popular",
+    cover: "peso.jpg",
+    audio: "Peso 140bpm.mp3"
+  },
+  {
+    id: 3,
+    name: "Lore",
+    price: 2500,
+    section: "popular",
+    cover: "lore.jpg",
+    audio: "Lore 149bpm.mp3"
+  },
+  {
+    id: 4,
+    name: "Takoyama",
+    price: 1500,
+    section: "popular",
+    cover: "takoyama.jpg",
+    audio: "Takoyama 99bpm.mp3"
+  },
   // добавляй сюда следующие биты
 ];
 
@@ -551,7 +575,7 @@ function play(id) {
   playing = true;
 
   pTitle.textContent = beat.name;
-  pPrice.textContent = `{beat.price} ₽`;
+  pPrice.textContent = `${beat.price} ₽`;
   pCover.src = beat.cover;
   btnPlay.textContent = '⏸';
 
