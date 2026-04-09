@@ -431,62 +431,7 @@
       letter-spacing: 0.3px;
     }
 
-    /* Громкость */
-    .volume-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .vol-icon {
-      font-size: 13px;
-      color: rgba(255,255,255,0.35);
-      flex-shrink: 0;
-      width: 16px;
-      text-align: center;
-    }
-
-    .volume-slider {
-      flex: 1;
-      -webkit-appearance: none;
-      appearance: none;
-      height: 3px;
-      background: rgba(255,255,255,0.12);
-      border-radius: 2px;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .volume-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: #fff;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-      transition: transform 0.15s;
-    }
-
-    .volume-slider::-webkit-slider-thumb:hover {
-      transform: scale(1.25);
-    }
-
-    .volume-slider::-moz-range-thumb {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: #fff;
-      border: none;
-      cursor: pointer;
-    }
-
-    .vol-value {
-      font-size: 10px;
-      color: rgba(255,255,255,0.35);
-      min-width: 28px;
-      text-align: right;
-    }
+    
 
   </style>
 </head>
@@ -539,12 +484,7 @@
         <div class="timer" id="timer">0:00 / 0:00</div>
       </div>
 
-      <!-- Громкость -->
-      <div class="volume-row">
-        <span class="vol-icon" id="volIcon">🔊</span>
-        <input class="volume-slider" id="volumeSlider" type="range" min="0" max="100" value="80"/>
-        <span class="vol-value" id="volValue">80%</span>
-      </div>
+      
 
     </div>
   </div>
@@ -585,9 +525,7 @@ const pPrice       = document.getElementById('pPrice');
 const progFill     = document.getElementById('progressFill');
 const progBar      = document.getElementById('progressBar');
 const timerEl      = document.getElementById('timer');
-const volumeSlider = document.getElementById('volumeSlider');
-const volValue     = document.getElementById('volValue');
-const volIcon      = document.getElementById('volIcon');
+
 
 let currentId = null;
 let playing   = false;
@@ -671,13 +609,6 @@ audio.addEventListener('timeupdate', () => {
 progBar.addEventListener('click', (e) => {
   if (!audio.duration) return;
   audio.currentTime = (e.offsetX / progBar.offsetWidth) * audio.duration;
-});
-
-volumeSlider.addEventListener('input', () => {
-  const val = parseInt(volumeSlider.value);
-  audio.volume = val / 100;
-  volValue.textContent = val + '%';
-  volIcon.textContent = val === 0 ? '🔇' : val < 40 ? '🔉' : '🔊';
 });
 
 function buyBeat(beatId) {
